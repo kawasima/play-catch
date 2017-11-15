@@ -1,5 +1,6 @@
 package net.unit8.playcatch.boundary;
 
+import kotowari.data.Validatable;
 import lombok.Data;
 import net.unit8.playcatch.entity.BallOwner;
 import net.unit8.playcatch.entity.IssueStatus;
@@ -10,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class IssueCreateRequest implements Serializable {
+public class IssueCreateRequest extends BoundaryBase {
     @NotBlank
     private String subject;
     @NotBlank

@@ -13,7 +13,7 @@ public interface IssueDao {
     @Select
     List<QueriedIssue> selectAll(SelectOptions options);
 
-    @Select
+    @Select(ensureResult = true)
     Issue selectById(Long id);
 
     @Insert

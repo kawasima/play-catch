@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class IssueUpdateRequest implements Serializable {
+public class IssueUpdateRequest extends BoundaryBase {
     private String id;
     @Size(max = 100)
     private String subject;

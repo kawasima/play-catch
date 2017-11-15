@@ -15,6 +15,7 @@ import kotowari.middleware.serdes.ToStringBodyWriter;
 import kotowari.routing.Routes;
 import net.unit8.playcatch.controller.IndexController;
 import net.unit8.playcatch.controller.IssueController;
+import net.unit8.playcatch.middleware.MappingExceptionMiddleware;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -67,6 +68,7 @@ public class PlayCatchApplicationFactory implements ApplicationFactory {
         app.use(builder(new SerDesMiddleware())
                 .set(SerDesMiddleware::setBodyWriters, new ToStringBodyWriter())
                 .build());
+        app.use(new MappingExceptionMiddleware<>());
         app.use(new ValidateFormMiddleware());
         app.use(new ControllerInvokerMiddleware(injector));
 

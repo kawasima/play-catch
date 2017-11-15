@@ -4,6 +4,7 @@ import enkan.collection.Parameters;
 import enkan.component.BeansConverter;
 import enkan.component.doma2.DomaProvider;
 import enkan.security.bouncr.UserPermissionPrincipal;
+import net.unit8.playcatch.MalformedRequestException;
 import net.unit8.playcatch.boundary.IssueCreateRequest;
 import net.unit8.playcatch.boundary.IssueUpdateRequest;
 import net.unit8.playcatch.dao.IssueDao;
@@ -16,6 +17,7 @@ import org.seasar.doma.jdbc.SelectOptions;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.time.Clock;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,6 +39,9 @@ public class IssueController {
 
     @Transactional
     public Issue create(IssueCreateRequest createRequest, UserPermissionPrincipal principal) {
+        if (createRequest.hasErrors()) {
+            throw new MalformedRequestException(createRequest);
+        }
         IssueDao issueDao = daoProvider.getDao(IssueDao.class);
         Issue issue = beansConverter.createFrom(createRequest, Issue.class);
         if (issue.getCreatedAt() == null) {
@@ -51,6 +56,9 @@ public class IssueController {
 
     @Transactional
     public Issue update(Parameters params, IssueUpdateRequest updateRequest, UserPermissionPrincipal principal) {
+        if (updateRequest.hasErrors()) {
+            throw new MalformedRequestException(updateRequest);
+        }
         IssueDao issueDao = daoProvider.getDao(IssueDao.class);
         Issue issue = issueDao.selectById(params.getLong("id"));
         Map<String, Object> req = new HashMap<>();
