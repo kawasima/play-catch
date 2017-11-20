@@ -8,6 +8,7 @@ import net.unit8.bouncr.sign.JwtHeader;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static enkan.util.BeanBuilder.builder;
 
@@ -19,12 +20,15 @@ public class IndexController {
     private JsonWebToken jwt;
 
     public HttpResponse index() {
-        Map<String, Object> claim = new HashMap<>();
-        claim.put("sub", "kawasima");
-        JwtHeader header = builder(new JwtHeader())
-                .set(JwtHeader::setAlg, "none")
-                .build();
-        String message = jwt.sign(claim, header, null);
+        String message = null;
+        if (!Objects.equals(System.getProperty("enkan.env"), "production")) {
+            Map<String, Object> claim = new HashMap<>();
+            claim.put("sub", "kawasima");
+            JwtHeader header = builder(new JwtHeader())
+                    .set(JwtHeader::setAlg, "none")
+                    .build();
+            message = jwt.sign(claim, header, null);
+        }
         return template.render("index",
                 "credential", message);
     }
