@@ -1,5 +1,6 @@
 package net.unit8.playcatch.controller;
 
+import enkan.Env;
 import enkan.data.HttpResponse;
 import kotowari.component.TemplateEngine;
 import net.unit8.bouncr.sign.JsonWebToken;
@@ -19,12 +20,15 @@ public class IndexController {
     private JsonWebToken jwt;
 
     public HttpResponse index() {
-        Map<String, Object> claim = new HashMap<>();
-        claim.put("sub", "kawasima");
-        JwtHeader header = builder(new JwtHeader())
-                .set(JwtHeader::setAlg, "none")
-                .build();
-        String message = jwt.sign(claim, header, null);
+        String message = null;
+        if (!Env.get("enkan.env").equals("production")) {
+            Map<String, Object> claim = new HashMap<>();
+            claim.put("sub", "kawasima");
+            JwtHeader header = builder(new JwtHeader())
+                    .set(JwtHeader::setAlg, "none")
+                    .build();
+            message = jwt.sign(claim, header, null);
+        }
         return template.render("index",
                 "credential", message);
     }
